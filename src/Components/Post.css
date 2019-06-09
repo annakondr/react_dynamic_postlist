@@ -1,0 +1,15 @@
+section {
+  border: 1px solid gray;
+  padding: 10px;
+  margin: 5px;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  border: 1px solid #803c7f;
+  padding: 10px;
+  margin: 5px;
+}
