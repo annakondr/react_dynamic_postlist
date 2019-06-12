@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Post from './Post.js';
 
 class PostList extends React.Component {
@@ -15,9 +14,10 @@ class PostList extends React.Component {
       filter: ''
     };
     this.loadData = this.loadData.bind(this);
-   this.createCompletedData = this.createCompletedData.bind(this);
     this.filterChanged = this.filterChanged.bind(this);
+    this.listChanged = this.listChanged.bind(this);
   }
+
   loadData() {
     this.setState({
       requested: true
@@ -38,6 +38,17 @@ class PostList extends React.Component {
             posts: JSON.parse(xhrPosts.response),
             comments: JSON.parse(xhrComments.response)
           });
+          const data = [];
+          this.state.posts.forEach((post) => {
+            post.author = this.state.authors.find(author => author.id === post.userId);
+            post.comments = this.state.comments.filter(comment => comment.postId === post.id);
+            data.push(<Post title={post.title} text={post.body} id={post.id}
+                                                author={post.author}
+                                                comments={post.comments} key={post.id}/>)
+          });
+          this.setState({
+            completedData: data
+          });
         });
         xhrComments.send();
       });
@@ -46,37 +57,36 @@ class PostList extends React.Component {
     xhrPosts.send();
   }
 
-  createCompletedData() {
-    this.state.posts.forEach((post) => {
-      post.author = this.state.authors.find(author => author.id === post.userId);
-      post.comments = this.state.comments.filter(comment => comment.postId === post.id);
-      return this.state.completedData.push(<Post title={post.title} text={post.body}
-                                                 author={post.author}
-                                                 comments={post.comments} key={post.id}/>)
+  filterChanged(event) {
+    this.setState({
+      filter: event.target.value
     })
   }
 
-  filterChanged(event) {
-    this.setState({
-      filter:  event.target.value.trim()
-    })
+  listChanged(event) {
+    if (event.key === 'Enter' && this.state.filter.trim() !== '') {
+      const filtredPosts = [];
+      for (const post of this.state.completedData) {
+        if (post.props.text.includes(this.state.filter) || post.props.title.includes(this.state.filter)) {
+          filtredPosts.push(post)
+        }
+      }
+      this.setState({
+        completedData: filtredPosts
+      });
+    }
   }
 
   render() {
     if (!this.state.requested) {
       return <button onClick={this.loadData} className='request'>Show the list!</button>
     } else if (this.state.loaded) {
-      this.createCompletedData();
-      //console.log (this.state.completedData)
-      //   this.state.completedData.forEach(post => {
-      //   if(post.props.text.includes(this.state.filter)) {
-      //     this.createCompletedData()
-      //   }
-      // })
       return (
         <div>
-          <input type='text' placeholder="Search" onChange={this.filterChanged} key={1}/>
-          {this.state.completedData}
+          <input type='text' placeholder="Search" onChange={this.filterChanged}
+                 onKeyDown={this.listChanged} className='filter' key={1} />
+          {this.state.completedData }
+
         </div>
       );
     } else {

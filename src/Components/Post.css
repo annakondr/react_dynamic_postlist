@@ -1,7 +1,12 @@
+body {
+  margin: 10px;
+}
+
 section {
   border: 1px solid gray;
   padding: 10px;
   margin: 5px;
+  border-radius: 5px;
 }
 
 ul {
@@ -12,4 +17,22 @@ li {
   border: 1px solid #803c7f;
   padding: 10px;
   margin: 5px;
+  border-radius: 5px;
+}
+
+.request {
+  margin: 5px;
+  border-radius: 5px;
+  height: 30px;
+  width: 170px;
+  cursor: pointer;
+  background: #803c7f;
+  color: white;
+}
+
+.filter {
+  margin: 5px;
+  height: 25px;
+  border-radius: 5px;
+  color: #803c7f;
 }

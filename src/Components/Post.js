@@ -15,11 +15,10 @@ class Post extends React.Component {
       <section>
         <h3>{this.props.title}</h3>
         <p>{this.props.text}</p>
-        <User name={this.props.author.name} email={this.props.author.email}
-              address={this.getAddress()}/>
+        <User name={this.props.author.name} email={this.props.author.email}/>
+        <span> {this.getAddress()}</span>
         <CommentList list={this.props.comments}/>
       </section>
-
     )
   }
 }
